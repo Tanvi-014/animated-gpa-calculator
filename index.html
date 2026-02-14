@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPA Calculator - CS Animations</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background:#000000;
+      
+      border: 1px solid rgba(107, 101, 224, 0.895);
+      min-height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      overflow-x: auto;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 25px 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(107, 101, 224, 0.3);
+      z-index: 1000;
+      text-align: center;
+    }
+
+    .main-title {
+      margin: 0;
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      padding: 20px 40px;
+      border: 2px solid #6b65e0;
+      display: inline-block;
+      position: relative;
+      background: linear-gradient(135deg, #6b65e0 0%, #4d9fff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .main-title::before,
+    .main-title::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #4d9fff;
+    }
+    
+    .main-title::before {
+      top: -2px;
+      left: -2px;
+      border-right: none;
+      border-bottom: none;
+      box-shadow: 0 0 10px rgba(77, 159, 255, 0.5);
+    }
+    
+    .main-title::after {
+      bottom: -2px;
+      right: -2px;
+      border-left: none;
+      border-top: none;
+      box-shadow: 0 0 10px rgba(77, 159, 255, 0.5);
+    }
+
+    .cards-container {
+      padding: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .subject-card {
+      position: relative;
+      width: 260px;
+      height: 195px;
+      background: #000;
+      border-radius: 10px;
+      padding: 16px;
+      color: white;
+      box-shadow: 0 20px 40px rgba(13, 82, 219, 0.6);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .subject-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 45px rgba(13, 82, 219, 0.7);
+    }
+
+    .subject-title {
+      font-size: 30px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: #645cf1d6;
+      outline: none;
+      cursor: text;
+      transition: color 0.3s;
+    }
+
+    .subject-title:focus {
+      color: #8b7eff;
+    }
+
+    .subject-title:empty:before {
+      content: "Subject Name";
+      color: #666;
+    }
+
+    .field {
+      margin-bottom: 9px;
+      max-width: 175px;
+    }
+
+    label {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 4px;
+      opacity: 0.9;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: none;
+      outline:none;
+      font-size: 14px;
+      transition: box-shadow 0.3s;
+    }
+
+    input:focus {
+      box-shadow: 0 0 0 2px rgba(107, 101, 224, 0.5);
+    }
+
+    .grade-input {
+      text-transform: uppercase;
+    }
+
+    .add-card-btn {
+      width: 260px;
+      height: 195px;
+      background: #2a2a2a;
+      border: 2px dashed #555;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .add-card-btn:hover {
+      background: #333;
+      border-color: #777;
+      color: #777;
+      transform: scale(1.02);
+    }
+
+    .gpa-display {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(13, 82, 219, 0.4);
+      color: white;
+      text-align: center;
+      width: 200px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(107, 101, 224, 0.5);
+    }
+
+    .gpa-label {
+      font-size: 10px;
+      opacity: 0.7;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .gpa-number {
+      font-size: 36px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #6b65e0, #4d9fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: transform 0.3s;
+    }
+
+    .gpa-number.update-pulse {
+      animation: gpa-pulse 0.5s ease;
+    }
+
+    @keyframes gpa-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,0,0,0.7);
+      border: none;
+      color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      opacity: 0.7;
+      transition: all 0.3s;
+      z-index: 100;
+    }
+
+    .delete-btn:hover {
+      opacity: 1;
+      transform: scale(1.1);
+      background: rgba(255,0,0,0.9);
+    }
+
+    /* Math cube styles */
+    .math-cube {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 40px;
+      height: 40px;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+      z-index: 50;
+      transform-style: preserve-3d;
+      transform: rotateX(25deg) rotateY(-25deg);
+      animation: cube-rotate 4s ease-in-out infinite;
+    }
+
+    @keyframes cube-rotate {
+      0%, 100% { transform: rotateX(25deg) rotateY(-25deg); }
+      50% { transform: rotateX(45deg) rotateY(25deg); }
+    }
+
+    .cube-face {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border: 2px solid white;
+      transition: box-shadow 0.8s;
+    }
+
+    .cube-front  { transform: translateZ(20px); }
+    .cube-back   { transform: rotateY(180deg) translateZ(20px); }
+    .cube-right  { transform: rotateY(90deg) translateZ(20px); }
+    .cube-left   { transform: rotateY(-90deg) translateZ(20px); }
+    .cube-top    { transform: rotateX(90deg) translateZ(20px); }
+    .cube-bottom { transform: rotateX(-90deg) translateZ(20px); }
+
+    /* Glitch Effect for Computer Languages */
+    .code-glitch {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      font-family: 'Courier New', monospace;
+      font-size: 32px;
+      font-weight: bold;
+      color: currentColor;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 50;
+      text-shadow: 0 0 20px currentColor;
+    }
+
+    .glitch-text {
+      position: relative;
+      display: inline-block;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch-text::before {
+      animation: glitch-1 0.4s infinite;
+      color: #00ffff;
+      z-index: -1;
+    }
+
+    .glitch-text::after {
+      animation: glitch-2 0.4s infinite;
+      color: #ff00ff;
+      z-index: -2;
+    }
+
+    @keyframes glitch-1 {
+      0% { transform: translate(0); }
+      20% { transform: translate(-3px, 3px); }
+      40% { transform: translate(-3px, -3px); }
+      60% { transform: translate(3px, 3px); }
+      80% { transform: translate(3px, -3px); }
+      100% { transform: translate(0); }
+    }
+
+    @keyframes glitch-2 {
+      0% { transform: translate(0); }
+      20% { transform: translate(3px, -3px); }
+      40% { transform: translate(3px, 3px); }
+      60% { transform: translate(-3px, -3px); }
+      80% { transform: translate(-3px, 3px); }
+      100% { transform: translate(0); }
+    }
+
+    /* Biology Leaf Animation */
+    .bio-leaf {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      width: 50px;
+      height: 60px;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .leaf-glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 0 50% 50% 50%;
+      opacity: 0;
+      transition: opacity 0.8s;
+      animation: leaf-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes leaf-pulse {
+      0%, 100% { 
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      50% { 
+        opacity: 0.9;
+        transform: scale(1.05);
+      }
+    }
+
+    /* Keyboard Keys Animation */
+    .keyboard-keys {
+      position: absolute;
+      bottom: 15px;
+      right: 20px;
+      width: 80px;
+      height: 60px;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .key {
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+      border: 2px solid;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+      font-size: 20px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+      transition: transform 0.15s;
+    }
+
+    .key-c {
+      bottom: 5px;
+      left: 0;
+      transform: rotate(-15deg);
+      border-color: currentColor;
+      color: currentColor;
+      animation: key-press-c 2s ease-in-out infinite;
+    }
+
+    .key-v {
+      bottom: 0;
+      right: 0;
+      transform: rotate(10deg);
+      border-color: currentColor;
+      color: currentColor;
+      animation: key-press-v 2s ease-in-out infinite;
+      animation-delay: 0.1s;
+    }
+
+    @keyframes key-press-c {
+      0%, 100% {
+        transform: rotate(-15deg) translateY(0);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 0 15px currentColor;
+      }
+      50% {
+        transform: rotate(-15deg) translateY(3px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 20px currentColor;
+      }
+    }
+
+    @keyframes key-press-v {
+      0%, 100% {
+        transform: rotate(10deg) translateY(0);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 0 15px currentColor;
+      }
+      50% {
+        transform: rotate(10deg) translateY(3px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 20px currentColor;
+      }
+    }
+
+    /* Circuit Board Animation */
+    .circuit-board {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 40;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .circuit-line {
+      position: absolute;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .circuit-node {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 12px currentColor;
+      animation: pulse-node 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-node {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
+
+    /* Test Tube Animation */
+    .test-tube-container {
+      position: absolute;
+      bottom: 10px;
+      right: 15px;
+      width: 30px;
+      height: 80px;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .tube-glass {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 70px;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tube-cap {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 2px;
+    }
+
+    .tube-liquid {
+      position: absolute;
+      bottom: 2px;
+      left: 2px;
+      right: 2px;
+      height: 0%;
+      background: linear-gradient(to top, currentColor, rgba(255, 255, 255, 0.3));
+      border-radius: 0 0 6px 6px;
+      transition: height 1.2s ease-out;
+      box-shadow: 0 0 15px currentColor;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: 10%;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      opacity: 0;
+      animation: bubble-rise 1.5s ease-in infinite;
+    }
+
+    @keyframes bubble-rise {
+      0% {
+        bottom: 10%;
+        opacity: 0;
+        transform: translateX(0) scale(1);
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        bottom: 90%;
+        opacity: 0;
+        transform: translateX(5px) scale(0.5);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <h1 class="main-title">GPA CALCULATOR</h1>
+  </div>
+
+  <div class="cards-container">
+    <div class="subject-card" data-card-id="0">
+    <button class="delete-btn" onclick="deleteCard(this)">×</button>
+    
+    <div class="subject-title" contenteditable="true"></div>
+
+    <div class="field">
+      <label>Grade</label>
+      <input type="text" class="grade-input" placeholder="S, A, B..." maxlength="1"  pattern="[SABCDEF]"/>
+    </div>
+
+    <div class="field">
+      <label>Credits</label>
+      <input type="number" class="credits-input" placeholder="e.g. 3" min="1" max="10" />
+    </div>
+  </div>
+
+  <div class="add-card-btn" onclick="addNewCard()">+</div>
+
+  <div class="gpa-display">
+    <div class="gpa-label">GPA</div>
+    <div class="gpa-number">0.00</div>
+  </div>
+
+  </div>
+  <!-- End cards-container -->
+
+  <script>
+    let cardCounter = 1;
+
+    const subjectAnimations = [
+      {
+        keywords: ['physics', 'electrical', 'electric', 'electronics', 'circuit theory', 'electromagnetics'],
+        animation: 'bulb'
+      },
+      {
+        keywords: ['math', 'maths', 'mathematics', 'calculus', 'algebra', 'geometry', 'statistics', 'probability', 'discrete', 'linear algebra', 'numerical'],
+        animation: 'cube'
+      },
+      {
+        // Core CS & Programming - GLITCH
+        keywords: [
+          'computer', 'programming', 'coding', 'cs', 'software', 'algorithm', 'data structure', 
+          'python', 'java', 'javascript', 'c++', 'html', 'css', 'react', 'node', 'web', 'code',
+          'oops', 'oop', 'object oriented', 'dsa', 'competitive',
+          'operating system', 'os', 'compiler', 'theory of computation', 'toc', 'automata',
+          'computer architecture', 'coa', 'microprocessor', 'assembly'
+        ],
+        animation: 'glitch'
+      },
+      {
+        // Networks, Security, AI, DB - CIRCUIT
+        keywords: [
+          'network', 'security', 'cyber', 'cryptography', 'cn', 'computer network',
+          'machine learning', 'ml', 'ai', 'artificial intelligence', 'deep learning', 'dl', 'neural',
+          'database', 'dbms', 'sql', 'rdbms', 'nosql', 'data mining', 'big data',
+          'distributed', 'cloud computing', 'blockchain', 'iot'
+        ],
+        animation: 'circuit'
+      },
+      {
+        keywords: ['chemistry', 'chemical', 'organic', 'inorganic', 'biochemistry'],
+        animation: 'testtube'
+      },
+      {
+        keywords: ['biology', 'bio', 'anatomy', 'zoology', 'botany', 'genetics'],
+        animation: 'leaf'
+      },
+      {
+        // Default for other CS subjects - COPY PASTE KEYS (funny!)
+        keywords: [
+          'software engineering', 'se', 'hci', 'human computer interaction',
+          'computer graphics', 'cg', 'mobile', 'android', 'ios', 'app development',
+          'information theory', 'formal language', 'project', 'seminar', 'elective'
+        ],
+        animation: 'keys'
+      }
+    ];
+
+    // Grade to color mapping
+    const gradeColors = {
+      'S': '#8b5cf6', // purple
+      'A': '#3b82f6', // blue
+      'B': '#06b6d4', // cyan
+      'C': '#22c55e', // green
+      'D': '#eab308', // yellow
+      'E': '#f97316', // orange
+      'F': '#ef4444'  // red
+    };
+
+    const gradeGlows = {
+      'S': '0 0 25px rgba(139, 92, 246, 1), 0 0 50px rgba(139, 92, 246, 0.7), 0 0 75px rgba(139, 92, 246, 0.4)',
+      'A': '0 0 25px rgba(59, 130, 246, 1), 0 0 50px rgba(59, 130, 246, 0.7), 0 0 75px rgba(59, 130, 246, 0.4)',
+      'B': '0 0 25px rgba(6, 182, 212, 1), 0 0 50px rgba(6, 182, 212, 0.7), 0 0 75px rgba(6, 182, 212, 0.4)',
+      'C': '0 0 25px rgba(34, 197, 94, 1), 0 0 50px rgba(34, 197, 94, 0.7), 0 0 75px rgba(34, 197, 94, 0.4)',
+      'D': '0 0 25px rgba(234, 179, 8, 1), 0 0 50px rgba(234, 179, 8, 0.7), 0 0 75px rgba(234, 179, 8, 0.4)',
+      'E': '0 0 25px rgba(249, 115, 22, 1), 0 0 50px rgba(249, 115, 22, 0.7), 0 0 75px rgba(249, 115, 22, 0.4)',
+      'F': '0 0 25px rgba(239, 68, 68, 1), 0 0 50px rgba(239, 68, 68, 0.7), 0 0 75px rgba(239, 68, 68, 0.4)'
+    };
+
+    function initializeCard(card) {
+      const title = card.querySelector('.subject-title');
+      const gradeInput = card.querySelector('.grade-input');
+      const creditsInput = card.querySelector('.credits-input');
+
+      // Trigger animation on blur (when user leaves the field)
+      title.addEventListener('blur', () => {
+        const subjectText = title.textContent.trim().toLowerCase();
+        
+        if (subjectText) {
+          let animType = null;
+
+          for (let subject of subjectAnimations) {
+            if (subject.keywords.some(word => subjectText.includes(word))) {
+              animType = subject.animation;
+              break;
+            }
+          }
+          
+          if (animType) {
+            playAnimation(card, animType);
+          }
+        }
+      });
+
+      // Also keep Enter key functionality for those who prefer it
+      title.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          title.blur(); // This will trigger the blur event above
+        }
+      });
+
+      gradeInput.addEventListener('input', function() {
+        const cube = card.querySelector('.math-cube');
+        if (cube) {
+          updateCubeColor(card, this.value.trim().toUpperCase());
+        }
+        calculateGPA();
+      });
+
+      creditsInput.addEventListener('input', calculateGPA);
+    }
+
+    function playAnimation(card, type) {
+      const existingSvg = card.querySelector('svg');
+      const existingCube = card.querySelector('.math-cube');
+      const existingGlitch = card.querySelector('.code-glitch');
+      const existingCircuit = card.querySelector('.circuit-board');
+      const existingTestTube = card.querySelector('.test-tube-container');
+      const existingLeaf = card.querySelector('.bio-leaf');
+      const existingKeys = card.querySelector('.keyboard-keys');
+      
+      if (existingSvg) existingSvg.remove();
+      if (existingCube) existingCube.remove();
+      if (existingGlitch) existingGlitch.remove();
+      if (existingCircuit) existingCircuit.remove();
+      if (existingTestTube) existingTestTube.remove();
+      if (existingLeaf) existingLeaf.remove();
+      if (existingKeys) existingKeys.remove();
+
+      switch(type) {
+        case 'bulb':
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('width', '100%');
+          svg.setAttribute('height', '100%');
+          svg.setAttribute('viewBox', '0 0 300 200');
+          svg.style.position = 'absolute';
+          svg.style.top = '0';
+          svg.style.right = '0';
+          svg.style.pointerEvents = 'none';
+
+          const cardId = card.getAttribute('data-card-id');
+          const filterId = `energyGlow${cardId}`;
+
+          svg.innerHTML = `
+            <defs>
+              <filter id="${filterId}">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+          `;
+
+          card.appendChild(svg);
+          createPhysicsBulb(svg, filterId);
+          animatePhysicsBulb(card);
+          break;
+
+        case 'cube':
+          createMathCube(card);
+          break;
+
+        case 'glitch':
+          createCodeGlitch(card);
+          break;
+
+        case 'circuit':
+          createCircuitBoard(card);
+          break;
+
+        case 'testtube':
+          createTestTube(card);
+          break;
+
+        case 'leaf':
+          createBioLeaf(card);
+          break;
+
+        case 'keys':
+          createKeyboardKeys(card);
+          break;
+      }
+    }
+
+    function createPhysicsBulb(svg, filterId) {
+      svg.innerHTML += `
+        <path class="wire-path"
+          d="M 0 190 C 100 200, 200 0, 200 140 S 260 90, 260 60"
+          fill="none" stroke="white" stroke-width="3"
+          stroke-linecap="round" stroke-linejoin="round"/>
+
+        <circle class="energy-dot" cx="0" cy="190" r="5" fill="yellow" 
+          filter="url(#${filterId})" opacity="0"/>
+
+        <circle class="bulb-glow" cx="260" cy="55" r="22" fill="yellow" 
+          opacity="0" filter="url(#${filterId})"/>
+
+        <path d="M260 35 C248 35, 240 45, 240 55 C240 68, 250 75, 260 80 C270 75, 280 68, 280 55 C280 45, 272 35, 260 35 Z"
+          fill="none" stroke="white" stroke-width="3" stroke-linejoin="round"/>
+
+        <line x1="250" y1="82" x2="270" y2="82" stroke="white" 
+          stroke-width="3" stroke-linecap="round"/>
+      `;
+    }
+
+    function animatePhysicsBulb(card) {
+      const path = card.querySelector('.wire-path');
+      const dot = card.querySelector('.energy-dot');
+      const bulb = card.querySelector('.bulb-glow');
+
+      const pathLength = path.getTotalLength();
+      
+      dot.style.opacity = '1';
+      bulb.style.opacity = '0';
+
+      let start = null;
+      const duration = 1250;
+
+      function animate(timestamp) {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+
+        const point = path.getPointAtLength(progress * pathLength);
+        dot.setAttribute('cx', point.x);
+        dot.setAttribute('cy', point.y);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          dot.style.opacity = '0';
+          bulb.style.transition = 'opacity 1s';
+          bulb.style.opacity = '1';
+          setTimeout(() => bulb.style.opacity = '0', 500);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function createMathCube(card) {
+      const cube = document.createElement('div');
+      cube.className = 'math-cube';
+      
+      const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+      faces.forEach(face => {
+        const faceDiv = document.createElement('div');
+        faceDiv.className = `cube-face cube-${face}`;
+        cube.appendChild(faceDiv);
+      });
+      
+      card.appendChild(cube);
+      
+      setTimeout(() => {
+        cube.style.opacity = '1';
+        
+        const gradeInput = card.querySelector('.grade-input');
+        const currentGrade = gradeInput.value.trim().toUpperCase();
+        if (currentGrade && gradeGlows[currentGrade]) {
+          updateCubeGlow(card, gradeGlows[currentGrade]);
+        } else {
+          updateCubeGlow(card, gradeGlows['A']);
+        }
+      }, 50);
+    }
+
+    function updateCubeColor(card, grade) {
+      const glow = gradeGlows[grade] || gradeGlows['A'];
+      updateCubeGlow(card, glow);
+    }
+
+    function updateCubeGlow(card, glow) {
+      const faces = card.querySelectorAll('.cube-face');
+      faces.forEach(face => {
+        face.style.boxShadow = glow;
+      });
+    }
+
+    // CODE GLITCH ANIMATION
+    function createCodeGlitch(card) {
+      const container = document.createElement('div');
+      container.className = 'code-glitch';
+      
+      const gradeInput = card.querySelector('.grade-input');
+      const currentGrade = gradeInput.value.trim().toUpperCase();
+      const color = gradeColors[currentGrade] || gradeColors['A'];
+
+      const glitchText = document.createElement('div');
+      glitchText.className = 'glitch-text';
+      glitchText.setAttribute('data-text', '</>');
+      glitchText.textContent = '</>';
+      glitchText.style.color = color;
+
+      container.appendChild(glitchText);
+      card.appendChild(container);
+
+      setTimeout(() => {
+        container.style.opacity = '1';
+
+        setTimeout(() => {
+          container.style.opacity = '0';
+          setTimeout(() => container.remove(), 300);
+        }, 2000);
+      }, 50);
+    }
+
+    // CIRCUIT BOARD ANIMATION
+    function createCircuitBoard(card) {
+      const container = document.createElement('div');
+      container.className = 'circuit-board';
+      card.appendChild(container);
+
+      const gradeInput = card.querySelector('.grade-input');
+      const currentGrade = gradeInput.value.trim().toUpperCase();
+      const color = gradeColors[currentGrade] || gradeColors['A'];
+
+      // Create circuit paths
+      const paths = [
+        { x: 180, y: 20, width: 2, height: 40, dir: 'v' },
+        { x: 180, y: 60, width: 50, height: 2, dir: 'h' },
+        { x: 230, y: 40, width: 2, height: 22, dir: 'v' },
+        { x: 200, y: 100, width: 2, height: 40, dir: 'v' },
+        { x: 150, y: 120, width: 52, height: 2, dir: 'h' },
+        { x: 220, y: 80, width: 30, height: 2, dir: 'h' }
+      ];
+
+      paths.forEach((path, index) => {
+        setTimeout(() => {
+          const line = document.createElement('div');
+          line.className = 'circuit-line';
+          line.style.color = color;
+          
+          if (path.dir === 'h') {
+            line.style.left = path.x + 'px';
+            line.style.top = path.y + 'px';
+            line.style.width = '0px';
+            line.style.height = path.height + 'px';
+            
+            setTimeout(() => {
+              line.style.transition = 'width 0.4s ease-out';
+              line.style.width = path.width + 'px';
+            }, 10);
+          } else {
+            line.style.left = path.x + 'px';
+            line.style.top = path.y + 'px';
+            line.style.width = path.width + 'px';
+            line.style.height = '0px';
+            
+            setTimeout(() => {
+              line.style.transition = 'height 0.4s ease-out';
+              line.style.height = path.height + 'px';
+            }, 10);
+          }
+          
+          container.appendChild(line);
+        }, index * 150);
+      });
+
+      // Create circuit nodes
+      const nodes = [
+        { x: 180, y: 60 },
+        { x: 230, y: 60 },
+        { x: 200, y: 120 },
+        { x: 250, y: 80 }
+      ];
+
+      nodes.forEach((node, index) => {
+        setTimeout(() => {
+          const nodeEl = document.createElement('div');
+          nodeEl.className = 'circuit-node';
+          nodeEl.style.color = color;
+          nodeEl.style.left = (node.x - 4) + 'px';
+          nodeEl.style.top = (node.y - 4) + 'px';
+          container.appendChild(nodeEl);
+        }, (paths.length + index) * 150);
+      });
+
+      container.style.opacity = '1';
+
+      setTimeout(() => {
+        container.style.opacity = '0';
+        setTimeout(() => container.remove(), 300);
+      }, 3000);
+    }
+
+    // TEST TUBE ANIMATION
+    function createTestTube(card) {
+      const container = document.createElement('div');
+      container.className = 'test-tube-container';
+      
+      const gradeInput = card.querySelector('.grade-input');
+      const currentGrade = gradeInput.value.trim().toUpperCase();
+      const color = gradeColors[currentGrade] || '#ec4899'; // default pink
+
+      // Create tube structure
+      const tubeGlass = document.createElement('div');
+      tubeGlass.className = 'tube-glass';
+      
+      const tubeCap = document.createElement('div');
+      tubeCap.className = 'tube-cap';
+      
+      const liquid = document.createElement('div');
+      liquid.className = 'tube-liquid';
+      liquid.style.color = color;
+      
+      // Create bubbles
+      const bubble1 = document.createElement('div');
+      bubble1.className = 'bubble';
+      bubble1.style.left = '6px';
+      bubble1.style.animationDelay = '0s';
+      
+      const bubble2 = document.createElement('div');
+      bubble2.className = 'bubble';
+      bubble2.style.left = '10px';
+      bubble2.style.animationDelay = '0.5s';
+      
+      const bubble3 = document.createElement('div');
+      bubble3.className = 'bubble';
+      bubble3.style.left = '8px';
+      bubble3.style.animationDelay = '1s';
+
+      tubeGlass.appendChild(liquid);
+      tubeGlass.appendChild(bubble1);
+      tubeGlass.appendChild(bubble2);
+      tubeGlass.appendChild(bubble3);
+      
+      container.appendChild(tubeGlass);
+      container.appendChild(tubeCap);
+      card.appendChild(container);
+
+      // Fade in and fill liquid
+      setTimeout(() => {
+        container.style.opacity = '1';
+        
+        setTimeout(() => {
+          liquid.style.height = '70%';
+        }, 100);
+
+        // Fade out after animation
+        setTimeout(() => {
+          container.style.opacity = '0';
+          setTimeout(() => container.remove(), 500);
+        }, 2500);
+      }, 50);
+    }
+
+    // BIOLOGY LEAF ANIMATION
+    function createBioLeaf(card) {
+      const container = document.createElement('div');
+      container.className = 'bio-leaf';
+      
+      const gradeInput = card.querySelector('.grade-input');
+      const currentGrade = gradeInput.value.trim().toUpperCase();
+      const color = gradeColors[currentGrade] || '#22c55e'; // default green
+
+      // Create SVG leaf
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '50');
+      svg.setAttribute('height', '60');
+      svg.setAttribute('viewBox', '0 0 50 60');
+      svg.className = 'leaf-shape';
+
+      // Leaf path (teardrop/leaf shape)
+      const leafPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      leafPath.setAttribute('d', 'M25 5 Q15 15, 10 30 Q10 45, 25 55 Q40 45, 40 30 Q35 15, 25 5 Z');
+      leafPath.setAttribute('fill', color);
+      leafPath.setAttribute('opacity', '0.8');
+
+      // Main vein (center line)
+      const mainVein = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      mainVein.setAttribute('x1', '25');
+      mainVein.setAttribute('y1', '5');
+      mainVein.setAttribute('x2', '25');
+      mainVein.setAttribute('y2', '55');
+      mainVein.setAttribute('stroke', 'rgba(255, 255, 255, 0.4)');
+      mainVein.setAttribute('stroke-width', '2');
+
+      // Side veins
+      const vein1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      vein1.setAttribute('x1', '25');
+      vein1.setAttribute('y1', '20');
+      vein1.setAttribute('x2', '15');
+      vein1.setAttribute('y2', '28');
+      vein1.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+      vein1.setAttribute('stroke-width', '1');
+
+      const vein2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      vein2.setAttribute('x1', '25');
+      vein2.setAttribute('y1', '20');
+      vein2.setAttribute('x2', '35');
+      vein2.setAttribute('y2', '28');
+      vein2.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+      vein2.setAttribute('stroke-width', '1');
+
+      const vein3 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      vein3.setAttribute('x1', '25');
+      vein3.setAttribute('y1', '35');
+      vein3.setAttribute('x2', '15');
+      vein3.setAttribute('y2', '42');
+      vein3.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+      vein3.setAttribute('stroke-width', '1');
+
+      const vein4 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      vein4.setAttribute('x1', '25');
+      vein4.setAttribute('y1', '35');
+      vein4.setAttribute('x2', '35');
+      vein4.setAttribute('y2', '42');
+      vein4.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+      vein4.setAttribute('stroke-width', '1');
+
+      svg.appendChild(leafPath);
+      svg.appendChild(mainVein);
+      svg.appendChild(vein1);
+      svg.appendChild(vein2);
+      svg.appendChild(vein3);
+      svg.appendChild(vein4);
+
+      // Glow effect
+      const glow = document.createElement('div');
+      glow.className = 'leaf-glow';
+      glow.style.background = `radial-gradient(circle, ${color}, transparent)`;
+      glow.style.filter = 'blur(8px)';
+
+      container.appendChild(glow);
+      container.appendChild(svg);
+      card.appendChild(container);
+
+      // Fade in and keep glowing - NO fade out!
+      setTimeout(() => {
+        container.style.opacity = '1';
+        glow.style.opacity = '0.7';
+      }, 50);
+
+      // Update leaf color when grade changes
+      gradeInput.addEventListener('input', function() {
+        const newGrade = this.value.trim().toUpperCase();
+        const newColor = gradeColors[newGrade] || '#22c55e';
+        leafPath.setAttribute('fill', newColor);
+        glow.style.background = `radial-gradient(circle, ${newColor}, transparent)`;
+      });
+    }
+
+    // KEYBOARD KEYS ANIMATION (Copy-Paste C & V)
+    function createKeyboardKeys(card) {
+      const container = document.createElement('div');
+      container.className = 'keyboard-keys';
+      
+      const gradeInput = card.querySelector('.grade-input');
+      const currentGrade = gradeInput.value.trim().toUpperCase();
+      const color = gradeColors[currentGrade] || gradeColors['A'];
+
+      // Create C key
+      const keyC = document.createElement('div');
+      keyC.className = 'key key-c';
+      keyC.textContent = 'C';
+      keyC.style.color = color;
+      keyC.style.borderColor = color;
+
+      // Create V key
+      const keyV = document.createElement('div');
+      keyV.className = 'key key-v';
+      keyV.textContent = 'V';
+      keyV.style.color = color;
+      keyV.style.borderColor = color;
+
+      container.appendChild(keyC);
+      container.appendChild(keyV);
+      card.appendChild(container);
+
+      // Fade in and keep animating - stays visible!
+      setTimeout(() => {
+        container.style.opacity = '1';
+      }, 50);
+
+      // Update key colors when grade changes
+      gradeInput.addEventListener('input', function() {
+        const newGrade = this.value.trim().toUpperCase();
+        const newColor = gradeColors[newGrade] || gradeColors['A'];
+        keyC.style.color = newColor;
+        keyC.style.borderColor = newColor;
+        keyV.style.color = newColor;
+        keyV.style.borderColor = newColor;
+      });
+    }
+
+    function addNewCard() {
+      const newCard = document.createElement('div');
+      newCard.className = 'subject-card';
+      newCard.setAttribute('data-card-id', cardCounter++);
+      
+      newCard.innerHTML = `
+        <button class="delete-btn" onclick="deleteCard(this)">×</button>
+        
+        <div class="subject-title" contenteditable="true"></div>
+
+        <div class="field">
+          <label>Grade</label>
+          <input type="text" class="grade-input" placeholder="S, A, B.." maxlength="1" pattern="SABCDEF" />
+        </div>
+
+        <div class="field">
+          <label>Credits</label>
+          <input type="number" class="credits-input" placeholder="e.g. 3" min="1" max="10" />
+        </div>
+      `;
+
+      const container = document.querySelector('.cards-container');
+      const addBtn = document.querySelector('.add-card-btn');
+      container.insertBefore(newCard, addBtn);
+      initializeCard(newCard);
+      calculateGPA();
+    }
+
+    function deleteCard(btn) {
+      const cards = document.querySelectorAll('.subject-card');
+      if (cards.length > 1) {
+        btn.closest('.subject-card').remove();
+        calculateGPA();
+      } else {
+        alert('You need at least one subject card!');
+      }
+    }
+
+    function gradeToPoints(grade) {
+      const gradeValues = {
+        'S': 10, 'A': 9, 'B': 8, 'C': 7,
+        'D': 6, 'E': 5, 'F': 0
+      };
+      return gradeValues[grade.toUpperCase()] || 0;
+    }
+
+    function calculateGPA() {
+      const cards = document.querySelectorAll('.subject-card');
+      let totalPoints = 0;
+      let totalCredits = 0;
+
+      cards.forEach(card => {
+        const grade = card.querySelector('.grade-input').value.trim();
+        const credits = parseFloat(card.querySelector('.credits-input').value);
+
+        if (grade && credits && credits > 0) {
+          const points = gradeToPoints(grade);
+          totalPoints += points * credits;
+          totalCredits += credits;
+        }
+      });
+
+      const gpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : '0.00';
+      const gpaNumber = document.querySelector('.gpa-number');
+      gpaNumber.textContent = gpa;
+      
+      // Add pulse animation when GPA updates
+      gpaNumber.classList.remove('update-pulse');
+      void gpaNumber.offsetWidth; // Force reflow
+      gpaNumber.classList.add('update-pulse');
+    }
+
+    initializeCard(document.querySelector('.subject-card'));
+  </script>
+
+</body>
+</html>
