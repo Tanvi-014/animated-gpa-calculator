@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GPA Calculator - CS Animations</title>
+  <title>interactive GPA Calculator</title>
 
   <style>
     * {
@@ -12,7 +12,6 @@
 
     body {
       background:#000000;
-      
       border: 1px solid rgba(107, 101, 224, 0.895);
       min-height: 100vh;
       margin: 0;
@@ -26,8 +25,7 @@
       width: 100%;
       padding: 25px 0;
       background: rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(107, 101, 224, 0.3);
+      border-bottom: 1px solid rgba(107, 101, 224, 0.7);
       z-index: 1000;
       text-align: center;
     }
@@ -36,9 +34,9 @@
       margin: 0;
       font-size: 40px;
       font-weight: 700;
-      letter-spacing: 6px;
-      padding: 20px 40px;
-      border: 2px solid #6b65e0;
+      padding: 20px 30px;
+      letter-spacing: 3px;
+      border: 3px solid #6b65e0;
       display: inline-block;
       position: relative;
       background: linear-gradient(135deg, #6b65e0 0%, #4d9fff 100%);
@@ -47,31 +45,7 @@
       background-clip: text;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
-    .main-title::before,
-    .main-title::after {
-      content: '';
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border: 2px solid #4d9fff;
-    }
-    
-    .main-title::before {
-      top: -2px;
-      left: -2px;
-      border-right: none;
-      border-bottom: none;
-      box-shadow: 0 0 10px rgba(77, 159, 255, 0.5);
-    }
-    
-    .main-title::after {
-      bottom: -2px;
-      right: -2px;
-      border-left: none;
-      border-top: none;
-      box-shadow: 0 0 10px rgba(77, 159, 255, 0.5);
-    }
+  
 
     .cards-container {
       padding: 30px;
