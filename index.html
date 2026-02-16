@@ -625,13 +625,13 @@
     };
 
     const gradeGlows = {
-    'S': '0 0 25px rgba(226, 42, 112, 1), 0 0 50px rgba(226, 42, 112, 0.7), 0 0 75px rgba(226, 42, 112, 0.4)',
-    'A': '0 0 25px rgba(133, 36, 163, 1), 0 0 50px rgba(133, 36, 163, 0.7), 0 0 75px rgba(133, 36, 163, 0.4)',
-    'B': '0 0 25px rgba(44, 93, 165, 1), 0 0 50px rgba(44, 93, 165, 0.7), 0 0 75px rgba(44, 93, 165, 0.4)',
-    'C': '0 0 25px rgba(6, 182, 212, 1), 0 0 50px rgba(6, 182, 212, 0.7), 0 0 75px rgba(6, 182, 212, 0.4)',
-    'D': '0 0 25px rgba(187, 202, 26, 1), 0 0 50px rgba(187, 202, 26, 0.7), 0 0 75px rgba(187, 202, 26, 0.4)',
-    'E': '0 0 25px rgba(195, 95, 1, 1), 0 0 50px rgba(195, 95, 1, 0.7), 0 0 75px rgba(195, 95, 1, 0.4)',
-    'F': '0 0 25px rgba(195, 1, 1, 1), 0 0 50px rgba(195, 1, 1, 0.7), 0 0 75px rgba(195, 1, 1, 0.4)'
+    'S': '0 0 25px rgba(226, 42, 112, 0.7), 0 0 50px rgba(226, 42, 112, 0.5), 0 0 75px rgba(226, 42, 112, 0.3)',
+    'A': '0 0 25px rgba(133, 36, 163, 0.7), 0 0 50px rgba(133, 36, 163, 0.5), 0 0 75px rgba(133, 36, 163, 0.3)',
+    'B': '0 0 25px rgba(44, 93, 165, 0.7), 0 0 50px rgba(44, 93, 165, 0.5), 0 0 75px rgba(44, 93, 165, 0.3)',
+    'C': '0 0 25px rgba(6, 182, 212, 0.7), 0 0 50px rgba(6, 182, 212, 0.5), 0 0 75px rgba(6, 182, 212, 0.3)',
+    'D': '0 0 25px rgba(187, 202, 26, 0.7), 0 0 50px rgba(187, 202, 26, 0.5), 0 0 75px rgba(187, 202, 26, 0.3)',
+    'E': '0 0 25px rgba(195, 95, 1, 0.7), 0 0 50px rgba(195, 95, 1, 0.5), 0 0 75px rgba(195, 95, 1, 0.3)',
+    'F': '0 0 25px rgba(195, 1, 1, 0.7), 0 0 50px rgba(195, 1, 1, 0.5), 0 0 75px rgba(195, 1, 1, 0.3)'
 };
 
     function initializeCard(card) {
@@ -864,7 +864,7 @@
     }
 
     function updateCubeColor(card, grade) {
-      const glow = gradeGlows[grade] || gradeGlows['A'];
+      const glow = gradeGlows[grade] || gradeGlows['B'];
       updateCubeGlow(card, glow);
     }
 
@@ -882,7 +882,7 @@
       
       const gradeInput = card.querySelector('.grade-input');
       const currentGrade = gradeInput.value.trim().toUpperCase();
-      const color = gradeColors[currentGrade] || gradeColors['A'];
+      const color = gradeColors[currentGrade] || gradeColors['B'];
 
       const glitchText = document.createElement('div');
       glitchText.className = 'glitch-text';
@@ -1050,20 +1050,19 @@
       
       const gradeInput = card.querySelector('.grade-input');
       const currentGrade = gradeInput.value.trim().toUpperCase();
-      const color = gradeColors[currentGrade] || '#22c55e'; // default green
-
+      const color = gradeColors[currentGrade] || '#1AD9A5'; // default green
       // Create SVG leaf
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.setAttribute('width', '50');
-      svg.setAttribute('height', '60');
-      svg.setAttribute('viewBox', '0 0 50 60');
+      svg.setAttribute('height', '80');
+      svg.setAttribute('viewBox', '0 0 50 80');
       svg.className = 'leaf-shape';
 
       // Leaf path (teardrop/leaf shape)
       const leafPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       leafPath.setAttribute('d', 'M25 5 Q15 15, 10 30 Q10 45, 25 55 Q40 45, 40 30 Q35 15, 25 5 Z');
       leafPath.setAttribute('fill', color);
-      leafPath.setAttribute('opacity', '0.8');
+      leafPath.setAttribute('opacity', '0.6');
 
       // Main vein (center line)
       const mainVein = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -1080,7 +1079,7 @@
       vein1.setAttribute('y1', '20');
       vein1.setAttribute('x2', '15');
       vein1.setAttribute('y2', '28');
-      vein1.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+      vein1.setAttribute('stroke', 'rgba(255, 255, 255, 0.5)');
       vein1.setAttribute('stroke-width', '1');
 
       const vein2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -1088,7 +1087,7 @@
       vein2.setAttribute('y1', '20');
       vein2.setAttribute('x2', '35');
       vein2.setAttribute('y2', '28');
-      vein2.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+      vein2.setAttribute('stroke', 'rgba(255, 255, 255, 0.5)');
       vein2.setAttribute('stroke-width', '1');
 
       const vein3 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -1096,7 +1095,7 @@
       vein3.setAttribute('y1', '35');
       vein3.setAttribute('x2', '15');
       vein3.setAttribute('y2', '42');
-      vein3.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+      vein3.setAttribute('stroke', 'rgba(255, 255, 255, 0.5)');
       vein3.setAttribute('stroke-width', '1');
 
       const vein4 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -1104,7 +1103,7 @@
       vein4.setAttribute('y1', '35');
       vein4.setAttribute('x2', '35');
       vein4.setAttribute('y2', '42');
-      vein4.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+      vein4.setAttribute('stroke', 'rgba(255, 255, 255, 0.5)');
       vein4.setAttribute('stroke-width', '1');
 
       svg.appendChild(leafPath);
@@ -1118,7 +1117,7 @@
       const glow = document.createElement('div');
       glow.className = 'leaf-glow';
       glow.style.background = `radial-gradient(circle, ${color}, transparent)`;
-      glow.style.filter = 'blur(8px)';
+      glow.style.filter = 'blur(6px)';
 
       container.appendChild(glow);
       container.appendChild(svg);
@@ -1127,13 +1126,13 @@
       // Fade in and keep glowing - NO fade out!
       setTimeout(() => {
         container.style.opacity = '1';
-        glow.style.opacity = '0.7';
+        glow.style.opacity = '0.6';
       }, 50);
 
       // Update leaf color when grade changes
       gradeInput.addEventListener('input', function() {
         const newGrade = this.value.trim().toUpperCase();
-        const newColor = gradeColors[newGrade] || '#22c55e';
+        const newColor = gradeColors[newGrade] || '#1AD9A5';
         leafPath.setAttribute('fill', newColor);
         glow.style.background = `radial-gradient(circle, ${newColor}, transparent)`;
       });
