@@ -64,7 +64,10 @@
       padding: 16px;
       color: white;
       box-shadow: 0 20px 40px rgba(13, 82, 219, 0.6);
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-width: none;          /* Firefox */
+      -ms-overflow-style: none;
       transition: transform 0.2s ease;
     }
 
@@ -1125,8 +1128,8 @@
 
       // Fade in and keep glowing - NO fade out!
       setTimeout(() => {
-        container.style.opacity = '1';
-        glow.style.opacity = '0.6';
+        container.style.opacity = '0.9';
+        glow.style.opacity = '0.7';
       }, 50);
 
       // Update leaf color when grade changes
@@ -1235,12 +1238,18 @@
       cards.forEach(card => {
         const grade = card.querySelector('.grade-input').value.trim();
         const credits = parseFloat(card.querySelector('.credits-input').value);
+        const validGrades = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
 
-        if (grade && credits && credits > 0) {
-          const points = gradeToPoints(grade);
-          totalPoints += points * credits;
-          totalCredits += credits;
-        }
+        if (
+              validGrades.includes(grade.toUpperCase()) &&
+              credits &&
+              credits > 0
+            ) {
+                  const points = gradeToPoints(grade);
+                  totalPoints += points * credits;
+                  totalCredits += credits;
+              }
+
       });
 
       const gpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : '0.00';
