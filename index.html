@@ -566,7 +566,7 @@
 
     const subjectAnimations = [
       {
-        keywords: ['physics', 'electrical', 'electric', 'electronics', 'circuit theory', 'electromagnetics'],
+        keywords: ['physics', 'phy','electrical', 'electric', 'electronics', 'circuit theory', 'electromagnetics'],
         animation: 'bulb'
       },
       {
@@ -595,7 +595,7 @@
         animation: 'circuit'
       },
       {
-        keywords: ['chemistry', 'chemical', 'organic', 'inorganic', 'biochemistry'],
+        keywords: ['chemistry', 'chemical', 'organic', 'inorganic', 'chem', 'biochemistry'],
         animation: 'testtube'
       },
       {
@@ -607,7 +607,7 @@
         keywords: [
           'software engineering', 'se', 'hci', 'human computer interaction',
           'computer graphics', 'cg', 'mobile', 'android', 'ios', 'app development',
-          'information theory', 'formal language', 'project', 'seminar', 'elective'
+          'information theory', 'it', 'formal language', 'project', 'seminar', 'elective'
         ],
         animation: 'keys'
       }
@@ -615,29 +615,59 @@
 
     // Grade to color mapping
     const gradeColors = {
-      'S': '#8b5cf6', // purple
-      'A': '#3b82f6', // blue
-      'B': '#06b6d4', // cyan
-      'C': '#22c55e', // green
-      'D': '#eab308', // yellow
-      'E': '#f97316', // orange
-      'F': '#ef4444'  // red
+      'S': '#e22a70', // pink
+      'A': '#8524a3', // purple
+      'B': '#2c5da5', // blue
+      'C': '#06b6d4', // cyan
+      'D': '#bbca1a', // yellow
+      'E': '#c35f01', // orange
+      'F': '#c30101'  // red
     };
 
     const gradeGlows = {
-      'S': '0 0 25px rgba(139, 92, 246, 1), 0 0 50px rgba(139, 92, 246, 0.7), 0 0 75px rgba(139, 92, 246, 0.4)',
-      'A': '0 0 25px rgba(59, 130, 246, 1), 0 0 50px rgba(59, 130, 246, 0.7), 0 0 75px rgba(59, 130, 246, 0.4)',
-      'B': '0 0 25px rgba(6, 182, 212, 1), 0 0 50px rgba(6, 182, 212, 0.7), 0 0 75px rgba(6, 182, 212, 0.4)',
-      'C': '0 0 25px rgba(34, 197, 94, 1), 0 0 50px rgba(34, 197, 94, 0.7), 0 0 75px rgba(34, 197, 94, 0.4)',
-      'D': '0 0 25px rgba(234, 179, 8, 1), 0 0 50px rgba(234, 179, 8, 0.7), 0 0 75px rgba(234, 179, 8, 0.4)',
-      'E': '0 0 25px rgba(249, 115, 22, 1), 0 0 50px rgba(249, 115, 22, 0.7), 0 0 75px rgba(249, 115, 22, 0.4)',
-      'F': '0 0 25px rgba(239, 68, 68, 1), 0 0 50px rgba(239, 68, 68, 0.7), 0 0 75px rgba(239, 68, 68, 0.4)'
-    };
+    'S': '0 0 25px rgba(226, 42, 112, 1), 0 0 50px rgba(226, 42, 112, 0.7), 0 0 75px rgba(226, 42, 112, 0.4)',
+    'A': '0 0 25px rgba(133, 36, 163, 1), 0 0 50px rgba(133, 36, 163, 0.7), 0 0 75px rgba(133, 36, 163, 0.4)',
+    'B': '0 0 25px rgba(44, 93, 165, 1), 0 0 50px rgba(44, 93, 165, 0.7), 0 0 75px rgba(44, 93, 165, 0.4)',
+    'C': '0 0 25px rgba(6, 182, 212, 1), 0 0 50px rgba(6, 182, 212, 0.7), 0 0 75px rgba(6, 182, 212, 0.4)',
+    'D': '0 0 25px rgba(187, 202, 26, 1), 0 0 50px rgba(187, 202, 26, 0.7), 0 0 75px rgba(187, 202, 26, 0.4)',
+    'E': '0 0 25px rgba(195, 95, 1, 1), 0 0 50px rgba(195, 95, 1, 0.7), 0 0 75px rgba(195, 95, 1, 0.4)',
+    'F': '0 0 25px rgba(195, 1, 1, 1), 0 0 50px rgba(195, 1, 1, 0.7), 0 0 75px rgba(195, 1, 1, 0.4)'
+};
 
     function initializeCard(card) {
       const title = card.querySelector('.subject-title');
       const gradeInput = card.querySelector('.grade-input');
       const creditsInput = card.querySelector('.credits-input');
+
+      title.addEventListener('blur', () => {
+  const subjectText = title.textContent.trim().toLowerCase();
+  
+  // NEW CODE: If empty, remove animations!
+  if (!subjectText) {
+    // Remove all animations
+    const existingSvg = card.querySelector('svg');
+    const existingCube = card.querySelector('.math-cube');
+    const existingGlitch = card.querySelector('.code-glitch');
+    const existingCircuit = card.querySelector('.circuit-board');
+    const existingTestTube = card.querySelector('.test-tube-container');
+    const existingLeaf = card.querySelector('.bio-leaf');
+    const existingKeys = card.querySelector('.keyboard-keys');
+    
+    if (existingSvg) existingSvg.remove();
+    if (existingCube) existingCube.remove();
+    if (existingGlitch) existingGlitch.remove();
+    if (existingCircuit) existingCircuit.remove();
+    if (existingTestTube) existingTestTube.remove();
+    if (existingLeaf) existingLeaf.remove();
+    if (existingKeys) existingKeys.remove();
+    
+    return; // Exit early, don't check for keywords
+  }
+  
+  // Rest of the code (keyword matching)
+  let animType = null;
+  // ... etc
+});
 
       // Trigger animation on blur (when user leaves the field)
       title.addEventListener('blur', () => {
@@ -677,7 +707,7 @@
 
       creditsInput.addEventListener('input', calculateGPA);
     }
-
+    
     function playAnimation(card, type) {
       const existingSvg = card.querySelector('svg');
       const existingCube = card.querySelector('.math-cube');
