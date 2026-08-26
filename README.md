@@ -1,5 +1,7 @@
 Interactive GPA Calculator
 A lightweight, single-file GPA calculator built with vanilla HTML, CSS, and JavaScript. No frameworks, no dependencies — just open and use.
+https://animated-gpa-calculator.vercel.app/
+
 
 Features
 
